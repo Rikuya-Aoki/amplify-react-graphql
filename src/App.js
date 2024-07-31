@@ -22,7 +22,7 @@ import {
 import config from './amplifyconfiguration.json';
 
 Amplify.configure(config);
-const API = generateClient();
+const API1 = generateClient();
 
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
@@ -32,7 +32,7 @@ const App = ({ signOut }) => {
   }, []);
 
   async function fetchNotes() {
-    const apiData = await API.graphql({ query: listNotes });
+    const apiData = await API1.graphql({ query: listNotes });
     const notesFromAPI = apiData.data.listNotes.items;
     await Promise.all(
      notesFromAPI.map(async (note) => {
@@ -56,7 +56,7 @@ const App = ({ signOut }) => {
       image: image.name,
     };
     if (!!data.image) await Storage.put(data.name, image);
-    await API.graphql({
+    await API1.graphql({
       query: createNoteMutation,
       variables: { input: data },
     });
@@ -68,7 +68,7 @@ const App = ({ signOut }) => {
   const newNotes = notes.filter((note) => note.id !== id);
   setNotes(newNotes);
   await Storage.remove(name);
-  await API.graphql({
+  await API1.graphql({
     query: deleteNoteMutation,
     variables: { input: { id } },
   });
@@ -127,13 +127,14 @@ const App = ({ signOut }) => {
    ))}
       </View>
       <Button onClick={signOut}>Sign Out</Button>
-    </View>
-    <View
-      name="image"
-      as="input"
-      type="file"
-      style={{ alignSelf: "end" }}
-    />
+      <View
+        name="image"
+        as="input"
+        type="file"
+        style={{ alignSelf: "end" }}
+     />
+     </View>
+
   );
 };
 
